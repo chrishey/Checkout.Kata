@@ -32,5 +32,29 @@ namespace Checkout.Kata.Tests
 
             _itemUnderTest.Total().ShouldEqual(itemPrice);
         }
+
+        [Fact]
+        public void CanScanMultipleItems()
+        {
+            var item = new Item { Sku = "A99", Price = 0.50m };
+            var item2 = new Item { Sku = "B15", Price = 0.30m };
+
+            _itemUnderTest.Scan(item);
+            _itemUnderTest.Scan(item2);
+
+            _itemUnderTest.GetItems().Count.ShouldEqual(2);
+        }
+
+        [Fact]
+        public void CanGetTotalForMultipleItems()
+        {
+            var item = new Item { Sku = "A99", Price = 0.50m };
+            var item2 = new Item { Sku = "B15", Price = 0.30m };
+
+            _itemUnderTest.Scan(item);
+            _itemUnderTest.Scan(item2);
+
+            _itemUnderTest.Total().ShouldEqual(0.80m);
+        }
     }
 }
