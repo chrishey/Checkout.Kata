@@ -22,6 +22,7 @@ namespace Checkout.Kata
 
         public void AddSpecialOffer(SpecialOffer offer)
         {
+            //todo: add a check to make sure the same offer can't added more than once
             _specialOffers.Add(offer);
         }
 
@@ -37,6 +38,8 @@ namespace Checkout.Kata
             {
                 if (_items.Count(x => x.Sku == offer.Sku) < offer.Quantity) continue; // offer doesn't apply on the SKU, not enough items
                 {
+                    // set a flag on the items where the offer is applied so they don't get added to the total
+                    // as they are in the sub total.
                     _items.Where(x=>x.Sku==offer.Sku).Take(offer.Quantity).ToList().ForEach(SetOfferApplied);
                     subTotal += offer.Price;
                 }
