@@ -56,5 +56,25 @@ namespace Checkout.Kata.Tests
 
             _itemUnderTest.Total().ShouldEqual(0.80m);
         }
+
+        [Fact]
+        public void CanApplySpecialOffer()
+        {
+            var item1 = new ItemBuilder().WithSku("A99").WithPrice(0.50m).Build();
+            var item2 = new ItemBuilder().WithSku("B15").WithPrice(0.30m).Build();
+            var item3 = new ItemBuilder().WithSku("B15").WithPrice(0.30m).Build();
+
+            var offer = new SpecialOffer {Sku = "B15", Price = 0.45m, Quantity = 2};
+
+            // this does require the offer to be added before scanning.
+            // However gives flexibility that you can add offers rather than them being set in the Checkout itself.
+            _itemUnderTest.AddSpecialOffer(offer);
+
+            _itemUnderTest.Scan(item1);
+            _itemUnderTest.Scan(item2);
+            _itemUnderTest.Scan(item3);
+
+            _itemUnderTest.Total().ShouldEqual(0.95m);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Checkout.Kata
@@ -6,10 +7,12 @@ namespace Checkout.Kata
     public class Checkout
     {
         private readonly List<Item> _items;
+        private readonly List<SpecialOffer> _specialOffers;
 
         public Checkout()
         {
             _items = new List<Item>();
+            _specialOffers = new List<SpecialOffer>();
         }
 
         public List<Item> GetItems()
@@ -17,9 +20,34 @@ namespace Checkout.Kata
             return _items;
         }
 
+        public void AddSpecialOffer(SpecialOffer offer)
+        {
+            _specialOffers.Add(offer);
+        }
+
         public decimal Total()
         {
-            return _items.Sum(x=>x.Price);
+            // check for qualifying offers, if none to apply return the item prices sum
+            if(!_specialOffers.Any())
+                return _items.Sum(x => x.Price);
+
+            var subTotal = 0.0m;
+
+            foreach (var offer in _specialOffers)
+            {
+                if (_items.Count(x => x.Sku == offer.Sku) == offer.Quantity)
+                {
+                    _items.Where(x=>x.Sku==offer.Sku).Take(offer.Quantity).ToList().ForEach(SetOfferApplied);
+                    subTotal += offer.Price;
+                }
+            }
+
+            return subTotal + _items.Where(i => !i.OfferApplied).Sum(p=>p.Price);
+        }
+
+        private void SetOfferApplied(Item item)
+        {
+            item.OfferApplied= true;
         }
 
         public void Scan(Item item)
