@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Checkout.Kata
 {
@@ -18,7 +19,7 @@ namespace Checkout.Kata
 
         public decimal Total()
         {
-            return 0m;
+            return _items.Sum(x=>x.Price);
         }
 
         public void Scan(Item item)

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Should;
+﻿using Should;
 using Xunit;
 
 namespace Checkout.Kata.Tests
@@ -25,6 +20,17 @@ namespace Checkout.Kata.Tests
             _itemUnderTest.Scan(item);
 
             _itemUnderTest.GetItems().Count.ShouldEqual(1);
+        }
+
+        [Fact]
+        public void CanGetCheckoutTotal()
+        {
+            var itemPrice = 0.50m;
+            var item = new Item { Sku = "A99", Price = itemPrice };
+
+            _itemUnderTest.Scan(item);
+
+            _itemUnderTest.Total().ShouldEqual(itemPrice);
         }
     }
 }
