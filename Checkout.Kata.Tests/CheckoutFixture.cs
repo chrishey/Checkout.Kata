@@ -48,10 +48,10 @@ namespace Checkout.Kata.Tests
         [Fact]
         public void CanGetTotalForMultipleItems()
         {
-            var item = new Item { Sku = "A99", Price = 0.50m };
-            var item2 = new Item { Sku = "B15", Price = 0.30m };
+            var item1 = new ItemBuilder().WithSku("A99").WithPrice(0.50m).Build();
+            var item2 = new ItemBuilder().WithSku("B15").WithPrice(0.30m).Build();
 
-            _itemUnderTest.Scan(item);
+            _itemUnderTest.Scan(item1);
             _itemUnderTest.Scan(item2);
 
             _itemUnderTest.Total().ShouldEqual(0.80m);
