@@ -76,5 +76,59 @@ namespace Checkout.Kata.Tests
 
             _itemUnderTest.Total().ShouldEqual(0.95m);
         }
+
+        [Fact]
+        public void CanTotalSpecialOfferAndNonQualifyingItems()
+        {
+            var item1 = new ItemBuilder().WithSku("A99").WithPrice(0.50m).Build();
+            var item2 = new ItemBuilder().WithSku("B15").WithPrice(0.30m).Build();
+            var item3 = new ItemBuilder().WithSku("B15").WithPrice(0.30m).Build();
+            var item4 = new ItemBuilder().WithSku("B15").WithPrice(0.30m).Build();
+            var item5 = new ItemBuilder().WithSku("C40").WithPrice(0.60m).Build();
+
+            var offer = new SpecialOffer { Sku = "B15", Price = 0.45m, Quantity = 2 };
+
+            // this does require the offer to be added before scanning.
+            // However gives flexibility that you can add offers rather than them being set in the Checkout itself.
+            _itemUnderTest.AddSpecialOffer(offer);
+
+            _itemUnderTest.Scan(item1);
+            _itemUnderTest.Scan(item2);
+            _itemUnderTest.Scan(item3);
+            _itemUnderTest.Scan(item4);
+            _itemUnderTest.Scan(item5);
+
+            _itemUnderTest.Total().ShouldEqual(1.85m);
+        }
+
+        [Fact]
+        public void CanTotalMultipleSpecialOffersAndNonQualifyingItems()
+        {
+            var item1 = new ItemBuilder().WithSku("A99").WithPrice(0.50m).Build();
+            var item2 = new ItemBuilder().WithSku("B15").WithPrice(0.30m).Build();
+            var item3 = new ItemBuilder().WithSku("B15").WithPrice(0.30m).Build();
+            var item4 = new ItemBuilder().WithSku("B15").WithPrice(0.30m).Build();
+            var item5 = new ItemBuilder().WithSku("C40").WithPrice(0.60m).Build();
+            var item6 = new ItemBuilder().WithSku("A99").WithPrice(0.50m).Build();
+            var item7 = new ItemBuilder().WithSku("A99").WithPrice(0.50m).Build();
+
+            var offer = new SpecialOffer { Sku = "B15", Price = 0.45m, Quantity = 2 };
+            var offer2 = new SpecialOffer { Sku = "A99", Price = 1.30m, Quantity = 3 };
+
+            // this does require the offer to be added before scanning.
+            // However gives flexibility that you can add offers rather than them being set in the Checkout itself.
+            _itemUnderTest.AddSpecialOffer(offer);
+            _itemUnderTest.AddSpecialOffer(offer2);
+
+            _itemUnderTest.Scan(item1);
+            _itemUnderTest.Scan(item2);
+            _itemUnderTest.Scan(item3);
+            _itemUnderTest.Scan(item4);
+            _itemUnderTest.Scan(item5);
+            _itemUnderTest.Scan(item6);
+            _itemUnderTest.Scan(item7);
+
+            _itemUnderTest.Total().ShouldEqual(2.65m);
+        }
     }
 }

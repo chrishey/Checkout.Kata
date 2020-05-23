@@ -35,7 +35,7 @@ namespace Checkout.Kata
 
             foreach (var offer in _specialOffers)
             {
-                if (_items.Count(x => x.Sku == offer.Sku) == offer.Quantity)
+                if (_items.Count(x => x.Sku == offer.Sku) < offer.Quantity) continue; // offer doesn't apply on the SKU, not enough items
                 {
                     _items.Where(x=>x.Sku==offer.Sku).Take(offer.Quantity).ToList().ForEach(SetOfferApplied);
                     subTotal += offer.Price;
